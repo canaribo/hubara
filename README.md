@@ -52,7 +52,7 @@ static/
 hubara.yaml     # config
 ```
 
-see the example repo for a full setup with frontmatter, config, and deploy to Vercel.
+see [canaribo/hubara-template](https://github.com/canaribo/hubara-template) for a full setup with frontmatter, config, and deploy to Vercel.
 
 ## license
 
