@@ -39,7 +39,7 @@
         {{block "content" .}}{{end}}
     </main>
     <footer>
-        {{.Config.Author}} &copy; {{.Now.Format "2006"}}
+        made with 🦤 <a href="https://github.com/canaribo/hubara" target="_blank" rel="noopener noreferrer">hubara</a>
     </footer>
     <script>
      (function() {
@@ -85,14 +85,18 @@
        var a = e.target.closest('a');
        if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
        if (a.target === '_blank' || a.hasAttribute('download')) return;
-       if (!sameOrigin(a.href)) return;
+       if (!sameOrigin(a.href)) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+        return;
+       }
        e.preventDefault();
        navigate(a.href, true);
       });
-      window.addEventListener('popstate', function(e) {
-       if (e.state && e.state.url) navigate(e.state.url, false);
-      });
-     })();
+       window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.url) navigate(e.state.url, false);
+       });
+      })();
     </script>
 </body>
 </html>{{end}}
