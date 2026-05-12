@@ -1,0 +1,23 @@
+{{template "base" .}}
+
+{{define "title"}}{{.Config.Title}}{{end}}
+
+{{define "content"}}
+{{if .Config.About}}
+<h2>about</h2>
+<section class="about">
+    <p>{{.Config.About}}</p>
+</section>
+{{end}}
+
+<ul class="blog-posts">
+    {{range .Posts}}
+    <li>
+        <span>
+            <time datetime="{{.DateShort}}">{{.DateShort}}</time>
+        </span>
+        <a href="/posts/{{.Slug}}/">{{.Title}}</a>
+    </li>
+    {{end}}
+</ul>
+{{end}}

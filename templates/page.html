@@ -1,0 +1,10 @@
+{{template "base" .}}
+
+{{define "title"}}{{.Post.Title}} — {{.Config.Title}}{{end}}
+
+{{define "content"}}
+<article>
+    <h2>{{.Post.Title}}</h2>
+    {{.Post.HTMLBody}}
+</article>
+{{end}}

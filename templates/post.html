@@ -1,0 +1,13 @@
+{{template "base" .}}
+
+{{define "title"}}{{.Post.Title}} — {{.Config.Title}}{{end}}
+
+{{define "content"}}
+<article>
+    <header>
+        <h2>{{.Post.Title}}</h2>
+        <time datetime="{{.Post.DateShort}}">{{.Post.DateLong}}</time>
+    </header>
+    {{.Post.HTMLBody}}
+</article>
+{{end}}

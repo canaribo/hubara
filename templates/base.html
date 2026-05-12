@@ -1,0 +1,98 @@
+{{define "base"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0f0f0f">
+    {{if .Config.Description}}<meta name="description" content="{{.Config.Description}}">{{end}}
+    {{if .Config.Author}}<meta name="author" content="{{.Config.Author}}">{{end}}
+    {{if .Config.BaseURL}}<link rel="canonical" href="{{.Config.BaseURL}}{{.Path}}">{{end}}
+    {{if .Config.BaseURL}}
+    <meta property="og:site_name" content="{{.Config.Title}}">
+    <meta property="og:url" content="{{.Config.BaseURL}}{{.Path}}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    {{if .Config.Title}}<meta property="og:title" content="{{.Config.Title}}">{{end}}
+    {{if .Config.Description}}<meta property="og:description" content="{{.Config.Description}}">{{end}}
+    {{if .Config.Favicon}}<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E{{.Config.Favicon}}%3C/text%3E%3C/svg%3E">{{end}}
+    {{end}}
+    {{if .Config.Favicon}}<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E{{.Config.Favicon}}%3C/text%3E%3C/svg%3E">
+    {{end}}    <title>{{block "title" .}}{{end}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/main.css">
+    {{block "head" .}}{{end}}
+</head>
+<body>
+    <div class="title">
+        <h1><a href="/">{{.Config.Title}}</a></h1>
+    </div>
+    <nav>
+        <a href="/">home</a>
+        {{range .Pages}}{{if .Nav}}
+        <a href="/{{.Slug}}/">{{.Title}}</a>
+        {{end}}{{end}}
+    </nav>
+    <main>
+        {{block "content" .}}{{end}}
+    </main>
+    <footer>
+        {{.Config.Author}} &copy; {{.Now.Format "2006"}}
+    </footer>
+    <script>
+     (function() {
+      function sameOrigin(url) {
+       try { var u = new URL(url, location.origin); return u.origin === location.origin; }
+       catch (_) { return false; }
+      }
+       function updateHead(doc) {
+        document.title = doc.title;
+        var selectors = [
+         'meta[name="description"]',
+         'meta[property="og:title"]',
+         'meta[property="og:description"]',
+         'meta[property="og:url"]',
+         'link[rel="canonical"]'
+        ];
+        selectors.forEach(function(s) {
+         var curr = document.querySelector(s);
+         var next = doc.querySelector(s);
+         if (curr && next) {
+          curr.setAttribute('content', next.getAttribute('content'));
+         } else if (!curr && next) {
+          document.head.appendChild(document.importNode(next, true));
+         } else if (curr && !next) {
+          curr.remove();
+         }
+        });
+       }
+       function navigate(url, push) {
+        fetch(url)
+         .then(function(res) { if (!res.ok) throw res; return res.text(); })
+         .then(function(html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var next = doc.querySelector('main');
+          if (!next) throw html;
+          updateHead(doc);
+          document.querySelector('main').replaceWith(next);
+          if (push) history.pushState({url: url}, '', url);
+         })
+         .catch(function() { location.href = url; });
+        }
+      document.addEventListener('click', function(e) {
+       var a = e.target.closest('a');
+       if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+       if (a.target === '_blank' || a.hasAttribute('download')) return;
+       if (!sameOrigin(a.href)) return;
+       e.preventDefault();
+       navigate(a.href, true);
+      });
+      window.addEventListener('popstate', function(e) {
+       if (e.state && e.state.url) navigate(e.state.url, false);
+      });
+     })();
+    </script>
+</body>
+</html>{{end}}
