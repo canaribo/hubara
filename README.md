@@ -4,7 +4,7 @@ a simple barebones static site generator written in Go.
 
 your **content** lives in one repo. this is the **tool** repo.
 
-see [`examples/content-repo`](examples/content-repo) for a ready-made template with a Vercel deploy workflow.
+see [`canaribo/hubara-template`](https://github.com/canaribo/hubara-template) for a ready-made template with a Vercel deploy workflow.
 
 ## install
 
